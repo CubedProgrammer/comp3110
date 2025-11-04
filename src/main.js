@@ -2,8 +2,8 @@ function main(args)
 {
     if (args.length < 5) {
 
-        console.log('<first commit> <second commit> <file>');
-        console.log('Commit can be a hash value or HEAD');
+        console.log('<first commit> <second commit> <files...>');
+        console.log('Commit can be a hash value or an offset from HEAD');
         return 1;
 
     }
@@ -18,4 +18,9 @@ function main(args)
 function diff(c1, c2, ls) {
     console.log(ls);
 }
-main(process.argv);
+
+function diffImpl(f1, f2) {
+    console.log('to be implemented')
+}
+
+process.exitCode = main(process.argv);
