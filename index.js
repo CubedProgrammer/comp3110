@@ -12,8 +12,8 @@ async function RunApp() {
   while (shouldContinue){
     const file = await ChooseFile();
     const versions = await ChooseVersions(file);
-    PrintDiff(DiffChecker(versions[0], versions[1]));
-    
+    await PrintDiff(DiffChecker(versions[0], versions[1]));
+
     shouldContinue = await confirm({
       message: 'Would you like to process another file?',
     });

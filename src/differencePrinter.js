@@ -1,9 +1,14 @@
-import { log } from '@clack/prompts';
+import { log, spinner } from '@clack/prompts';
 
-const PrintDiff = (differences) => {
-  log.step('Displaying differences:');
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  differences.forEach(diff => {
+const PrintDiff = async (differences) => {
+  const spin = spinner();
+  spin.start('Processing differences...');
+  await wait(1000);
+  spin.stop("Displaying differences:");
+
+  for (const diff of differences) {
     if (diff.startsWith('+')) {
       log.info(diff.slice(1));
     } else if (diff.startsWith('-')) {
@@ -11,9 +16,12 @@ const PrintDiff = (differences) => {
     } else {
       log.warn(diff.slice(1));
     }
-  });
 
+    await wait(500);
+  }
+  
   log.success('Differences displayed successfully');
+  await wait(1000);
 }
 
 export default PrintDiff;
