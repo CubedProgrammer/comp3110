@@ -28,7 +28,6 @@ const parseDifferences = (oldFile, newFile) => {
       currNewIndex++;
     }
 
-
     if (oldFile[currOldIndex] == newFile[currNewIndex]) {
       currOldIndex++;
       currNewIndex++;
@@ -36,7 +35,8 @@ const parseDifferences = (oldFile, newFile) => {
     else {
       for (let index = currNewIndex; index < newFile.length; index++) {
         if (isSimilar(oldFile[currOldIndex], newFile[index])) {
-          differeces.push("/Line " + (currOldIndex + 1) + " of old file has been changed/moved to line " + (index + 1) + " of new file");
+          if (currOldIndex != index) differeces.push("/Line " + (currOldIndex + 1) + " of old file has been changed/moved to line " + (index + 1) + " of new file");
+          else differeces.push("/Line " + (currOldIndex + 1) + " has been modified");
           break;
         }
       }
@@ -49,6 +49,8 @@ const parseDifferences = (oldFile, newFile) => {
 }
 
 const isNotPresentIn = (line, file, startingIndex) => {
+  if (!line) return true;
+
   for (let i = startingIndex || 0; i < file.length; i++) {
     const fLine = file[i];
     if (isSimilar(line, fLine)) {
