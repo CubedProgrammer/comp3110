@@ -42,6 +42,18 @@ export function getCommits(ret) {
 	exec('git log --oneline', callback);
 }
 
+export function getFiles(br, ret) {
+	const callback = (e, stdout, stderr) => {
+		if (e) {
+			ret(e);
+		} else {
+			const lns = stdout.split('\n').filter((ln) => ln.length);
+			ret(null, lns.sort());
+		}
+	}
+	exec('git ls-tree -r --name-only ' + br, callback);
+}
+
 export function changeBranch(br, cb) {
 	exec('git checkout ' + br, () => cb())
 }
