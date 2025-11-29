@@ -1,6 +1,6 @@
 import {exec} from 'child_process';
 
-function getBranches(ret) {
+export function getBranches(ret) {
 	const callback = (e, stdout, stderr) => {
 		if (e) {
 			ret(e);
@@ -22,4 +22,26 @@ function getBranches(ret) {
 		}
 	}
 	exec('git branch', callback);
+}
+
+export function getCommits(ret) {
+	const callback = (e, stdout, stderr) => {
+		if (e) {
+			ret(e);
+		} else {
+			
+			const lns = stdout.split('\n')
+			.filter((ln) => ln.length)
+			.map((ln) => {
+				return{hash: ln.substring(0, 7), msg: ln.substring(8)};
+			});
+			ret(null, lns);
+
+		}
+	}
+	exec('git log --oneline', callback);
+}
+
+export function changeBranch(br, cb) {
+	exec('git checkout ' + br, () => cb())
 }
