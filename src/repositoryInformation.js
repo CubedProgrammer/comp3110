@@ -1,59 +1,57 @@
 import {exec} from 'child_process';
 
 export function getBranches(ret) {
-	const callback = (e, stdout, stderr) => {
-		if (e) {
-			ret(e);
-		} else {
-
-			const lines = stdout.split(/\\s+/);
-			let currentBranchIndex = lines.length;
-			for(let i = 0; i < lines.length; ++i) {
-				if (lines[i].charAt(0) === '*') {
-					currentBranchIndex = i;
-					lines[i] = lines[i].substring(1).trim();
-				} else {
-					lines[i] = lines[i].trim();
-				}
+	const callback = (stdout) => {
+		const lines = stdout.split(/\\s+/);
+		let currentBranchIndex = lines.length;
+		for(let i = 0; i < lines.length; ++i) {
+			if (lines[i].charAt(0) === '*') {
+				currentBranchIndex = i;
+				lines[i] = lines[i].substring(1).trim();
+			} else {
+				lines[i] = lines[i].trim();
 			}
-
-			ret(null, lines, currentBranchIndex);
-
 		}
+
+		ret(null, lines, currentBranchIndex);
 	}
-	exec('git branch', callback);
+	exec('git branch', getExecCallback(callback, ret));
 }
 
 export function getCommits(ret) {
-	const callback = (e, stdout, stderr) => {
-		if (e) {
-			ret(e);
-		} else {
-			
-			const lns = stdout.split('\n')
-			.filter((ln) => ln.length)
-			.map((ln) => {
-				return{hash: ln.substring(0, 7), msg: ln.substring(8)};
-			});
-			ret(null, lns);
-
-		}
+	const callback = (stdout) => {
+		const lns = stdout.split('\n')
+		.filter((ln) => ln.length)
+		.map((ln) => {
+			return{hash: ln.substring(0, 7), msg: ln.substring(8)};
+		});
+		ret(null, lns);
 	}
-	exec('git log --oneline', callback);
+	exec('git log --oneline', getExecCallback(callback, ret));
 }
 
 export function getFiles(br, ret) {
-	const callback = (e, stdout, stderr) => {
-		if (e) {
-			ret(e);
-		} else {
-			const lns = stdout.split('\n').filter((ln) => ln.length);
-			ret(null, lns.sort());
-		}
+	const callback = (stdout) => {
+		const lns = stdout.split('\n').filter((ln) => ln.length);
+		ret(null, lns.sort());
 	}
-	exec('git ls-tree -r --name-only ' + br, callback);
+	exec('git ls-tree -r --name-only ' + br, getExecCallback(callback, ret));
 }
 
 export function changeBranch(br, cb) {
 	exec('git checkout ' + br, () => cb())
+}
+
+function getExecCallback(callback, ret) {
+	function r(e, stdout, stderr) {
+		if (e) {
+			ret(e);
+		} else {
+			if (stderr.length > 0) {
+				console.error(stderr);
+			}
+			callback(stdout);
+		}
+	}
+	return r;
 }
