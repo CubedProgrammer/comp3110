@@ -1,10 +1,27 @@
 import { select } from '@clack/prompts';
-import { readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { getBranchesAA, getFilesAA } from 'repositoryInformation';
 
-const ChooseFile = async () => {
-  const dirPath = process.cwd() + '/files';
-  const options =  readdirSync(dirPath).filter(file => statSync(join(dirPath, file)).isDirectory());
+export const ChooseBranch = async () => {
+  const [options, current] = await getBranchesAA();
+  for(let i = current; i > 0; --i) {
+    let tmp = options[i];
+    options[i] = options[i-1];
+    options[i-1] = tmp;
+  }
+
+  const selectOptions = options.map((option) => {
+    return { value: option, label: option };
+  });
+
+  return await select({
+    message: 'Pick a branch',
+    options: selectOptions,
+  });
+}
+
+export const ChooseFile = async (branch) => {
+  const dirPath = process.cwd()
+  const options = await getFilesAA(branch);
 
   const selectOptions = options.map((option) => {
     return { value: option, label: option };
@@ -15,5 +32,3 @@ const ChooseFile = async () => {
     options: selectOptions,
   });
 };
-
-export default ChooseFile;
