@@ -1,4 +1,4 @@
-const DiffChecker = (filePath1, filePath2) => {
+export const DiffChecker = (filePath1, filePath2) => {
   const oldFile = readFileLines(filePath1);
   const newFile = readFileLines(filePath2);
 
@@ -6,8 +6,15 @@ const DiffChecker = (filePath1, filePath2) => {
 }
 
 const readFileLines = (dat) => {
-  console.log(typeof(dat));
   return dat.split(/\r?\n/);
+}
+
+export const INSERTION = 97;
+export const DELETION = 98;
+export const MODIFICATION = 99;
+
+const makeDiff = (t, msg) => {
+  return { type: t, info: msg };
 }
 
 const parseDifferences = (oldFile, newFile) => {
@@ -30,7 +37,7 @@ const parseDifferences = (oldFile, newFile) => {
       }
   
       if (line_split && splits.length > 1) {
-        differences.push("/Line " + (currOldIndex + 1) + " of old file has been split to lines " + splits.join(", ") + " of new file");
+        differences.push(makeDiff(MODIFICATION, "Line " + (currOldIndex + 1) + " of old file has been split to lines " + splits.join(", ") + " of new file"));
         currOldIndex = currNewIndex;
         continue;
       }
@@ -40,12 +47,12 @@ const parseDifferences = (oldFile, newFile) => {
     }
 
     while(isNotPresentIn(oldFile[currOldIndex], newFile, currNewIndex) && currOldIndex < oldFile.length) {
-      differences.push("-Line " + (currOldIndex + 1) + " of old file has been removed");
+      differences.push(makeDiff(DELETION, "Line " + (currOldIndex + 1) + " of old file has been removed"));
       currOldIndex++;
     }
 
     while(isNotPresentIn(newFile[currNewIndex], oldFile, currOldIndex) && currNewIndex < newFile.length) {
-      differences.push("+Line " + (currNewIndex + 1) + " of new file has been added");
+      differences.push(makeDiff(INSERTION, "Line " + (currNewIndex + 1) + " of new file has been added"));
       currNewIndex++;
     }
 
@@ -56,8 +63,8 @@ const parseDifferences = (oldFile, newFile) => {
     else {
       for (let index = currNewIndex; index < newFile.length; index++) {
         if (isSimilar(oldFile[currOldIndex], newFile[index])) {
-          if (currOldIndex != index) differences.push("/Line " + (currOldIndex + 1) + " of old file has been changed/moved to line " + (index + 1) + " of new file");
-          else differences.push("/Line " + (currOldIndex + 1) + " has been modified");
+          if (currOldIndex != index) differences.push(makeDiff(MODIFICATION, "Line " + (currOldIndex + 1) + " of old file has been changed/moved to line " + (index + 1) + " of new file"));
+          else differences.push(makeDiff(MODIFICATION, "Line " + (currOldIndex + 1) + " has been modified"));
           break;
         }
       }
@@ -112,5 +119,3 @@ const isSimilar = (line1, line2) => {
 
   return similarity >= 0.75;
 };
-
-export default DiffChecker;

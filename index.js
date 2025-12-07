@@ -1,7 +1,7 @@
 import { intro, outro, confirm } from '@clack/prompts';
 import { ChooseFile, ChooseBranch } from './src/getOptions.js';
 import ChooseVersions from './src/getVersions.js';
-import DiffChecker from './src/differenceChecker.js';
+import { DiffChecker } from './src/differenceChecker.js';
 import PrintDiff from './src/differencePrinter.js';
 import { changeBranchAA } from './src/repositoryInformation.js';
 

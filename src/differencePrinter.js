@@ -1,4 +1,5 @@
 import { log, spinner } from '@clack/prompts';
+import { DELETION, INSERTION, MODIFICATION } from './differenceChecker.js';
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -13,14 +14,19 @@ const PrintDiff = async (differences) => {
     return;
   }
   for (const diff of differences) {
-    if (diff.startsWith('+')) {
-      log.info(diff.slice(1));
-    } else if (diff.startsWith('-')) {
-      log.error(diff.slice(1));
-    } else {
-      log.warn(diff.slice(1));
+    let func = null;
+    switch (diff.type) {
+      case INSERTION:
+        func = log.info;
+        break;
+      case DELETION:
+        func = log.error;
+        break;
+      case MODIFICATION:
+        func = log.warn;
+        break;
     }
-
+    func(diff.info);
     await wait(500);
   }
   log.message('');
