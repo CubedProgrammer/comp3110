@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 const DiffChecker = (filePath1, filePath2) => {
   const oldFile = readFileLines(filePath1);
   const newFile = readFileLines(filePath2);
@@ -7,9 +5,9 @@ const DiffChecker = (filePath1, filePath2) => {
   return parseDifferences(oldFile, newFile);
 }
 
-const readFileLines = (filePath) => {
-  const fileContents = fs.readFileSync(filePath, 'utf-8');
-  return fileContents.split(/\r?\n/);
+const readFileLines = (dat) => {
+  console.log(typeof(dat));
+  return dat.split(/\r?\n/);
 }
 
 const parseDifferences = (oldFile, newFile) => {

@@ -1,5 +1,5 @@
 import { select } from '@clack/prompts';
-import { getBranchesAA, getFilesAA } from 'repositoryInformation';
+import { getBranchesAA, getFilesAA } from './repositoryInformation.js';
 
 export const ChooseBranch = async () => {
   const [options, current] = await getBranchesAA();
@@ -13,10 +13,10 @@ export const ChooseBranch = async () => {
     return { value: option, label: option };
   });
 
-  return await select({
+  return [options[0], await select({
     message: 'Pick a branch',
     options: selectOptions,
-  });
+  })];
 }
 
 export const ChooseFile = async (branch) => {

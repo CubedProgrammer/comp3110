@@ -1,8 +1,9 @@
 import { intro, outro, confirm } from '@clack/prompts';
-import ChooseFile from './src/getOptions.js';
+import { ChooseFile, ChooseBranch } from './src/getOptions.js';
 import ChooseVersions from './src/getVersions.js';
 import DiffChecker from './src/differenceChecker.js';
 import PrintDiff from './src/differencePrinter.js';
+import { changeBranchAA } from './src/repositoryInformation.js';
 
 intro("Welcome to our COMP-3110 project!");
 
@@ -10,9 +11,12 @@ async function RunApp() {
   var shouldContinue = true;
 
   while (shouldContinue){
-    const file = await ChooseFile();
-    const versions = await ChooseVersions(file);
-    await PrintDiff(DiffChecker(versions[0], versions[1]));
+    const [old, current] = await ChooseBranch();
+    const file = await ChooseFile(current);
+    await changeBranchAA(current);
+    const [first, second] = await ChooseVersions(file);
+    await PrintDiff(DiffChecker(first, second));
+    await changeBranchAA(old);
 
     shouldContinue = await confirm({
       message: 'Would you like to process another file?',

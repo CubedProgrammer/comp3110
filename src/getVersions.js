@@ -1,14 +1,14 @@
+import { readFile } from 'fs/promises';
 import { select } from '@clack/prompts';
-import { readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { changeBranchAA, getCommitsAA } from './repositoryInformation.js';
 
-const ChooseVersions = async (folderName) => {
+const ChooseVersions = async (file) => {
   const selectedOptions = [];
-  const dirPath = process.cwd() + '/files/' + folderName;
-  const options =  readdirSync(dirPath).filter(file => statSync(join(dirPath, file)).isFile());
+  const readOptions = { encoding: 'utf8' };
 
+  const options = await getCommitsAA();
   var selectOptions = options.map((option) => {
-    return { value: option, label: option };
+    return { label: option.hash + ' ' + option.msg, value: option.hash };
   });
 
   selectedOptions.push(await select({
@@ -16,6 +16,8 @@ const ChooseVersions = async (folderName) => {
     options: selectOptions,
   }));
 
+  await changeBranchAA(selectedOptions[0]);
+  const firstVersion = await readFile(file, readOptions);
   selectOptions = selectOptions.filter(opt => opt.value != selectedOptions[0]);
 
   selectedOptions.push(await select({
@@ -23,7 +25,10 @@ const ChooseVersions = async (folderName) => {
     options: selectOptions,
   }));
 
-  return selectedOptions.sort((a, b) => a.localeCompare(b)).map(opt => dirPath + '/' + opt);
+  await changeBranchAA(selectedOptions[1]);
+  const secondVersion = await readFile(file, readOptions);
+  return [firstVersion, secondVersion];
+
 };
 
 export default ChooseVersions;
