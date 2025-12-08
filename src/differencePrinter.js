@@ -27,7 +27,7 @@ const PrintDiff = async (differences) => {
         break;
     }
     func(diff.info);
-    await wait(500);
+    await wait(100);
   }
   log.message('');
   log.success('Differences displayed successfully');
