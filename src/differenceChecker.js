@@ -19,24 +19,24 @@ const parseDifferences = (oldFile, newFile) => {
 
   while (currOldIndex < oldFile.length || currNewIndex < newFile.length) {
     if (currOldIndex < oldFile.length && currNewIndex < newFile.length) {
-      var line_split = oldFile[currOldIndex].includes(newFile[currNewIndex])
       var splits = [];
   
-      var newStr = newFile[currNewIndex].trim()
-  
       while (oldFile[currOldIndex].trim().includes(newFile[currNewIndex].trim())) {
+        if (newFile[currNewIndex].trim() === '')
+          break;
+        
         splits.push(currNewIndex + 1);
         currNewIndex++;
 
         if (currNewIndex >= newFile.length) break;
       }
   
-      if (line_split && splits.length > 1) {
+      if (splits.length > 1) {
         differences.push("/Line " + (currOldIndex + 1) + " of old file has been split to lines " + splits.join(", ") + " of new file");
         currOldIndex = currNewIndex;
         continue;
       }
-      else if (line_split && splits.length == 1) {
+      else if (splits.length == 1) {
         currNewIndex--;
       }
     }
@@ -72,7 +72,7 @@ const parseDifferences = (oldFile, newFile) => {
 }
 
 const isNotPresentIn = (line, file, startingIndex) => {
-  if (!line) return true;
+  if (line === null || line === undefined) return true;
 
   for (let i = startingIndex || 0; i < file.length; i++) {
     const fLine = file[i];
