@@ -7,13 +7,13 @@ old: 10 new: 4
 old: 11 new: 5
 old: 13 new: 14
 old: 14 new: 15
-old: 16 new: -1
+old: 16 new: 17
 old: 17 new: -1
-old: 19 new: -1
+old: 19 new: 17
 old: 20 new: -1
-old: 22 new: -1
+old: 22 new: 14
 old: 23 new: -1
-old: 25 new: -1
+old: 25 new: 17
 old: 26 new: -1
 old: 28 new: -1
 old: 29 new: -1
@@ -22,4 +22,4 @@ old: 31 new: -1
 old: 33 new: 17
 old: 34 new: 18
 old: 36 new: 20
-old: 37 new: 21
+old: 37 new: 15
