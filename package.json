@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "answers:score": "node scripts/answerKeyScore.js",
+    "prof:score": "node scripts/profScore.js",
+    "score:all": "npm run answers:score && npm run prof:score",
+    "answers:mismatches": "node scripts/showMismatches.js answers",
+    "prof:mismatches": "node scripts/showMismatches.js prof"
   },
   "keywords": [],
   "author": "",
