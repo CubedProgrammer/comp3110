@@ -8,7 +8,9 @@
     "prof:score": "node scripts/profScore.js",
     "score:all": "npm run answers:score && npm run prof:score",
     "answers:mismatches": "node scripts/showMismatches.js answers",
-    "prof:mismatches": "node scripts/showMismatches.js prof"
+    "prof:mismatches": "node scripts/showMismatches.js prof",
+    "bug:comments": "node scripts/bugCommentScan.js",
+    "bug:intro": "node scripts/bugIntro.js"
   },
   "keywords": [],
   "author": "",

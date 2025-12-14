@@ -136,7 +136,7 @@ const isSimilar = (line1, line2) => {
   const maxLen = Math.max(len1, len2);
   const similarity = 1 - distance / maxLen;
 
-  return similarity >= 0.50;
+  return similarity >= 0.75;
 };
 
 const getSimilarity = (line1, line2) => {
